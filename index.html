@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#101423">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="नमस्कार">
+<title>नमस्कार 🙏</title>
+<!--
+  ============================================================
+  MAKER'S GUIDE (for Suyash) — how to update this page
+  ============================================================
+  1. DAILY_POOLS drives the "आजचे ३ चांगले पर्याय" section:
+     three pools (learn / light / health). One tile from each,
+     rotating daily by date. Add entries freely — verified
+     direct links only, please.
+  2. MENU is the bucket tree. Two kinds of nodes:
+       CATEGORY: { mr, en, emoji, children:[...] }  -> sub-tiles
+       LINK:     { mr, en, emoji, url, hrs, img? }
+         url = direct channel/playlist/site (preferred)
+         img = logo URL (news tiles); falls back to emoji
+  3. Footer auto-computes TOTAL HOURS from `hrs`.
+  4. Every `url` in this file was verified live on 2026-07-03.
+  5. Update LAST_UPDATED when you push.
+  ============================================================
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:rgba(255,255,255,.2);}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    background:#101423; color:#fff;
+    font-family:'Mukta','Noto Sans Devanagari',system-ui,sans-serif;
+    padding:calc(14px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right))
+            calc(36px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));
+  }
+  header{text-align:center; padding:8px 0 2px;}
+  header h1{font-size:34px; font-weight:800;}
+  header .date{font-size:22px; color:#b8c0d8; margin-top:2px;}
+
+  .quote{
+    margin:14px auto 4px; max-width:720px; text-align:center;
+    background:#1b2138; border-radius:18px; padding:16px 20px;
+    font-size:23px; line-height:1.5; font-weight:600;
+  }
+  .quote .who{display:block; font-size:17px; color:#b8c0d8; margin-top:6px; font-weight:400;}
+
+  .backbar{
+    position:sticky; top:0; z-index:10;
+    max-width:720px; margin:10px auto 0;
+    padding:6px 0; background:#101423;
+  }
+  .backbar button{
+    display:flex; align-items:center; justify-content:center; gap:12px; width:100%;
+    background:#3D5AFE; color:#fff; border:none; border-radius:18px;
+    padding:20px 18px; font-family:inherit; font-size:30px; font-weight:800;
+    cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,.4);
+  }
+  .backbar button:active{transform:scale(.97);}
+  .backbar .crumb{font-size:19px; color:#dbe1ff; font-weight:600;}
+  .backbar .crumb-s{display:none; font-size:19px; color:#dbe1ff; font-weight:600;}
+
+  .section-title{
+    max-width:720px; margin:26px auto 0; padding:0 4px;
+    font-size:27px; font-weight:800; text-align:center;
+  }
+  .section-title span{display:block; font-size:17px; color:#b8c0d8; font-weight:600; margin-top:2px;}
+
+  /* Full-width rectangles, stacked one below the other, centered text */
+  .grid{
+    max-width:720px; margin:14px auto 0;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .tile{
+    display:grid; grid-template-columns:64px minmax(0,1fr) 64px; align-items:center; gap:12px;
+    width:100%; min-height:118px; padding:18px 20px;
+    border-radius:18px; text-decoration:none; color:#fff;
+    box-shadow:0 3px 10px rgba(0,0,0,.35);
+    border:none; font-family:inherit; cursor:pointer;
+    transition:transform .08s ease;
+  }
+  .tile:active{transform:scale(.97);}
+  .tile .emoji{font-size:56px; line-height:1; flex-shrink:0; width:64px; text-align:center;}
+  .tile .logo{width:64px; height:64px; border-radius:14px; background:#fff; object-fit:cover; display:block; margin:0 auto;}
+  .tile .txt{flex:1; min-width:0; text-align:center;}
+  .tile .mr{font-size:33px; font-weight:800; line-height:1.3;}
+  .tile .en{font-size:17px; font-weight:600; opacity:.85; margin-top:2px;}
+  .tile .more{font-size:17px; font-weight:700; opacity:.9; margin-top:4px;}
+  .tile .chev{font-size:40px; font-weight:800; opacity:.9; text-align:center;}
+  .tile .spacer{width:100%; height:1px;}
+  .tile .tag{
+    display:inline-block; font-size:15px; font-weight:700;
+    background:rgba(255,255,255,.22); border-radius:10px;
+    padding:2px 12px; margin-bottom:4px;
+  }
+
+  footer{
+    max-width:720px; margin:44px auto 0; text-align:center;
+    color:#b8c0d8; font-size:17px; line-height:1.7;
+    border-top:1px solid #2a3252; padding-top:18px;
+  }
+  @media(max-width:430px){
+    header h1{font-size:30px;}
+    header .date{font-size:19px;}
+    .quote{font-size:21px; padding:14px 16px;}
+    .tile{min-height:104px; padding:16px 14px; gap:10px; grid-template-columns:52px minmax(0,1fr) 52px;}
+    .tile .emoji{font-size:44px; width:52px;}
+    .tile .logo{width:52px; height:52px;}
+    .tile .mr{font-size:28px;}
+    .tile .en{font-size:15px;}
+    .tile .chev{font-size:34px;}
+    .tile .spacer{width:100%;}
+    .backbar button{font-size:27px; padding:18px 16px;}
+    .backbar .crumb{display:none;}
+    .backbar .crumb-s{display:inline;}
+    .section-title{font-size:24px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🙏 नमस्कार</h1>
+  <div class="date" id="today"></div>
+</header>
+
+<div id="app"></div>
+
+<footer id="maker"></footer>
+
+<script>
+/* ================= EDIT BELOW THIS LINE ================= */
+
+const LAST_UPDATED = "2026-07-04";
+
+const QUOTES = [
+  {t:"तुम्ही समजता त्यापेक्षा तुम्ही खूप सक्षम आहात.", w:""},
+  {t:"अनुभव हीच खरी संपत्ती — आणि ती तुमच्याकडे भरपूर आहे.", w:""},
+  {t:"वय ही फक्त एक संख्या आहे — उत्साह हेच खरं तारुण्य.", w:""},
+  {t:"नवीन काही शिकायला वयाची अट नसते.", w:""},
+  {t:"प्रत्येक दिवस ही नवी संधी आहे.", w:""},
+  {t:"स्वप्न पाहण्यासाठी झोपेची गरज नसते — जागेपणी पाहिलेली स्वप्नं खरी होतात.", w:"डॉ. ए.पी.जे. अब्दुल कलाम"},
+  {t:"स्वतःवर विश्वास ठेवा — अर्धी लढाई तिथेच जिंकली जाते.", w:""},
+  {t:"शरीर थकतं, पण जिद्द थकत नाही.", w:""},
+  {t:"आजपर्यंत जे जमलं, ते पुढेही जमेल — आणि त्याहून अधिक.", w:""},
+  {t:"आनंद वाटल्याने वाढतो.", w:""}
+];
+
+// ===== आजचे ३ चांगले पर्याय — one from each pool, rotating daily =====
+// ALL direct links, ALL verified. Add more entries anytime.
+const DAILY_POOLS = [
+  { tag:"शिकण्यासारखे", list:[
+    {mr:"शहरं पायी फिरा", en:"Prowalk Tours — 4K city walks", emoji:"🚶", url:"https://www.youtube.com/channel/UCNzul4dnciIlDg8BAcn5-cQ"},
+    {mr:"Travel Marathi", en:"Trips & picnic spots in Marathi", emoji:"🎒", url:"https://www.youtube.com/@TravelMarathii"},
+    {mr:"Konkani Ranmanus", en:"Konkan nature & village life", emoji:"🌴", url:"https://www.youtube.com/channel/UCfHgBVb438Tp0pL8DeT6d4A"},
+    {mr:"Bharatiya Touring Party", en:"Food & travel across the world", emoji:"🍛", url:"https://www.youtube.com/channel/UCeHBtWLeV3wLJT3B_8Oq0TQ"},
+    {mr:"दूरदर्शनचा खजिना", en:"Prasar Bharati Archives", emoji:"📺", url:"https://www.youtube.com/channel/UCWxqSvqiH8PGpSNPSVtFwGw"},
+    {mr:"नॅट जिओ इंडिया", en:"Nature & science films", emoji:"🐯", url:"https://www.youtube.com/@NatGeoIndia"},
+    {mr:"नितीन बानुगडे पाटील", en:"History & leadership talks", emoji:"🔥", url:"https://www.youtube.com/channel/UCkVvCtOZd3kibXqO6YF6N5A"},
+    {mr:"मी आणि जपान", en:"Marathi family living in Japan", emoji:"🗾", url:"https://www.youtube.com/channel/UCSyAXA-C0f_3uHuh49E0LsA"},
+    {mr:"भारत एक खोज", en:"Shyam Benegal's classic series", emoji:"📜", url:"https://www.youtube.com/playlist?list=PLqtVCj5iilH4w0Y8KBB4fqBu25T0sGhXG"},
+    {mr:"इस्रो", en:"ISRO — India's space missions", emoji:"🚀", url:"https://www.youtube.com/@isroofficial5866"}
+  ]},
+  { tag:"हलकेफुलके", list:[
+    {mr:"सारेगामा मराठी", en:"Classic Marathi songs & bhavgeet", emoji:"🎵", url:"https://www.youtube.com/@saregamamarathi"},
+    {mr:"जुनी मराठी गाणी", en:"Evergreen melodies playlist", emoji:"🎶", url:"https://www.youtube.com/playlist?list=PLnGgwGS29G0GkGvNRuLyHg0MMbpIJHuu_"},
+    {mr:"पु. ल. देशपांडे", en:"Kathakathan — pure laughter", emoji:"😄", url:"https://www.youtube.com/playlist?list=PLtVoysWT7s1WpAlKGIFULTyzIjqHWGuvm"},
+    {mr:"गीत रामायण", en:"Sudhir Phadke — complete", emoji:"🙏", url:"https://www.youtube.com/playlist?list=PLcQ9aHIZMz1rIPUnAUVwt8rrNPpQm5ALL"},
+    {mr:"सुमीत म्युझिक", en:"Kirtan, abhang & bhaktigeet", emoji:"🪕", url:"https://www.youtube.com/@sumeetmusic"},
+    {mr:"जुनी हिंदी गाणी", en:"Saregama — Lata, Rafi, Kishore", emoji:"🎼", url:"https://www.youtube.com/@saregamamusic"},
+    {mr:"गाण्यांचा सुवर्णकाळ", en:"2 hrs nonstop old Marathi songs", emoji:"✨", url:"https://www.youtube.com/watch?v=h3T2DAbP-HI"},
+    {mr:"बासरी — हरिप्रसाद चौरसिया", en:"Calming classical flute", emoji:"🪈", url:"https://www.youtube.com/playlist?list=PLb5pq8p1HZfKusVbadzl7yHbR4atCXHe-"}
+  ]},
+  { tag:"आरोग्य", list:[
+    {mr:"योगा इन्स्टिट्यूट", en:"Dr. Hansaji — gentle yoga (Hindi)", emoji:"🧘", url:"https://www.youtube.com/@TheYogaInstituteHindi"},
+    {mr:"६० नंतर व्यायाम", en:"More Life Health — physio for 60+", emoji:"💪", url:"https://www.youtube.com/c/MoreLifeHealth"},
+    {mr:"Josh Talks मराठी", en:"Real-life success stories", emoji:"🗣️", url:"https://www.youtube.com/channel/UC6KXCdfpkCGmRTgBPj9hdbQ"},
+    {mr:"योगासने मराठीत", en:"Pebbles — yoga lessons in Marathi", emoji:"🕉️", url:"https://www.youtube.com/playlist?list=PLnCcvHTIyuPT-6OLgxIuToNhYX7IM59jr"}
+  ]}
+];
+
+// ===== THE FIVE BUCKETS =====
+// Strictly direct links. Every label describes exactly what opens.
+// Each destination appears ONCE in the menu (daily pool may repeat it).
+const MENU = [
+  {
+    mr:"विश्वासार्ह", en:"Trustworthy — news & safety", emoji:"🛡️", color:"#0063B1",
+    children:[
+      {mr:"DD सह्याद्री बातम्या", en:"Calm Doordarshan news", emoji:"📺", img:"https://unavatar.io/youtube/@DDSahyadriNews",
+       url:"https://www.youtube.com/@DDSahyadriNews", hrs:0},
+      {mr:"BBC न्यूज मराठी", en:"Reliable news, no shouting", emoji:"📰", img:"https://unavatar.io/youtube/@BBCNewsMarathi",
+       url:"https://www.youtube.com/@BBCNewsMarathi", hrs:0},
+      {
+        mr:"TV बातम्या LIVE", en:"Live TV news channels", emoji:"📡", color:"#0A4D8C",
+        children:[
+          {mr:"ABP माझा", en:"ABP Majha — live", emoji:"📺", img:"https://unavatar.io/youtube/@abpmajhatv",
+           url:"https://www.youtube.com/abpmajhatv", hrs:0},
+          {mr:"झी २४ तास", en:"Zee 24 Taas — live", emoji:"📺", img:"https://unavatar.io/youtube/@Zee24Taas",
+           url:"https://www.youtube.com/channel/UCVbsFo8aCgvIRIO9RYwsQMA", hrs:0},
+          {mr:"TV9 मराठी", en:"TV9 Marathi — live", emoji:"📺", img:"https://unavatar.io/youtube/@TV9MarathiLive",
+           url:"https://www.youtube.com/@TV9MarathiLive", hrs:0},
+          {mr:"मुंबई तक", en:"Mumbai Tak", emoji:"📺", img:"https://unavatar.io/youtube/@MumbaiTak",
+           url:"https://www.youtube.com/channel/UCQ2W9GCHctD59vQpvLKVg3g", hrs:0}
+        ]
+      },
+      {mr:"सायबर दोस्त", en:"Govt scam-safety tips", emoji:"🔒",
+       url:"https://www.youtube.com/@cyberdosti4c", hrs:10},
+      {mr:"फसवणूक तक्रार", en:"Report cyber fraud — cybercrime.gov.in", emoji:"🚨",
+       url:"https://cybercrime.gov.in/", hrs:0}
+    ]
+  },
+  {
+    mr:"शिकण्यासारखे", en:"Worth learning — travel & curiosity", emoji:"🌍", color:"#5C2D91",
+    children:[
+      {
+        mr:"भारत दर्शन", en:"Discover India — official tourism", emoji:"🛕", color:"#D24726",
+        children:[
+          {mr:"महाराष्ट्र पर्यटन", en:"Maharashtra Tourism — official", emoji:"🏔️",
+           url:"https://www.youtube.com/@MaharashtraTourismOfficial", hrs:30},
+          {mr:"कोकण", en:"Konkani Ranmanus — village life", emoji:"🌴",
+           url:"https://www.youtube.com/channel/UCfHgBVb438Tp0pL8DeT6d4A", hrs:40},
+          {mr:"केरळ पर्यटन", en:"Kerala Tourism — official", emoji:"🛶",
+           url:"https://www.youtube.com/channel/UCmiF2GcrQwFeiTdnKJ_023A", hrs:30},
+          {mr:"लडाख पर्यटन", en:"Ladakh Tourism — official", emoji:"🏍️",
+           url:"https://www.youtube.com/channel/UCKOT9qelFvlVC99qMneRYYg", hrs:20},
+          {mr:"राजस्थान पर्यटन", en:"Rajasthan Tourism — official", emoji:"🐪",
+           url:"https://www.youtube.com/channel/UCFibxqea7JmKpUWwStpl8bA", hrs:20},
+          {mr:"Travel Marathi", en:"Trips & picnic spots, in Marathi", emoji:"🎒",
+           url:"https://www.youtube.com/@TravelMarathii", hrs:40}
+        ]
+      },
+      {
+        mr:"जग दर्शन", en:"See the world", emoji:"🌏", color:"#0078D7",
+        children:[
+          {mr:"मी आणि जपान", en:"Marathi family living in Japan", emoji:"🗾",
+           url:"https://www.youtube.com/channel/UCSyAXA-C0f_3uHuh49E0LsA", hrs:40},
+          {mr:"स्वित्झर्लंड रेल्वे", en:"187 scenic Swiss train videos", emoji:"🚂",
+           url:"https://www.youtube.com/playlist?list=PLMY7sFvV2FUBVmDvs6TWXUy8Bx5oYR_wG", hrs:60},
+          {mr:"निसर्गरम्य जग 4K", en:"Scenic Relaxation — Alps to Africa", emoji:"🌍",
+           url:"https://www.youtube.com/channel/UC95bEkaIgwhxSjSsdMFXYGg", hrs:60},
+          {mr:"शहरं पायी फिरा", en:"Prowalk Tours — 4K world city walks", emoji:"🚶",
+           url:"https://www.youtube.com/channel/UCNzul4dnciIlDg8BAcn5-cQ", hrs:80},
+          {mr:"Bharatiya Touring Party", en:"Food & travel across the world", emoji:"🍛",
+           url:"https://www.youtube.com/channel/UCeHBtWLeV3wLJT3B_8Oq0TQ", hrs:60}
+        ]
+      },
+      {
+        mr:"प्रेरणा", en:"Motivation & confidence", emoji:"🌟", color:"#7719AA",
+        children:[
+          {mr:"Josh Talks मराठी", en:"Real people, real success stories", emoji:"🗣️",
+           url:"https://www.youtube.com/channel/UC6KXCdfpkCGmRTgBPj9hdbQ", hrs:60},
+          {mr:"नितीन बानुगडे पाटील", en:"History, leadership & fire", emoji:"🔥",
+           url:"https://www.youtube.com/channel/UCkVvCtOZd3kibXqO6YF6N5A", hrs:40},
+          {mr:"अविनाश चाटे", en:"Life, growth & confidence talks", emoji:"🌱",
+           url:"https://www.youtube.com/AvinashChate", hrs:25},
+          {mr:"सतीश फडके", en:"Personal growth, in calm Marathi", emoji:"📚",
+           url:"https://www.youtube.com/@SatishPhadkeSir", hrs:25},
+          {mr:"डॉ. बाबासाहेब आंबेडकर", en:"Mooknayak — Prasar Bharati documentary", emoji:"⚖️",
+           url:"https://www.youtube.com/watch?v=IQyGLNK-X9Y", hrs:2}
+        ]
+      },
+      {mr:"इस्रो", en:"ISRO — India's space missions", emoji:"🚀",
+       url:"https://www.youtube.com/@isroofficial5866", hrs:30},
+      {mr:"भारत एक खोज", en:"Shyam Benegal's classic — 57 episodes", emoji:"📜",
+       url:"https://www.youtube.com/playlist?list=PLqtVCj5iilH4w0Y8KBB4fqBu25T0sGhXG", hrs:50},
+      {mr:"नॅट जिओ इंडिया", en:"Nature, wildlife & science films", emoji:"🐯",
+       url:"https://www.youtube.com/@NatGeoIndia", hrs:60}
+    ]
+  },
+  {
+    mr:"हलकेफुलके", en:"Light & enjoyable — music & laughter", emoji:"🎵", color:"#E3008C",
+    children:[
+      {mr:"सारेगामा मराठी", en:"Marathi songs, bhavgeet & natya sangeet", emoji:"🎵",
+       url:"https://www.youtube.com/@saregamamarathi", hrs:80},
+      {mr:"जुनी मराठी गाणी", en:"Evergreen melodies — Rajshri playlist", emoji:"🎶",
+       url:"https://www.youtube.com/playlist?list=PLnGgwGS29G0GkGvNRuLyHg0MMbpIJHuu_", hrs:50},
+      {mr:"जुनी हिंदी गाणी", en:"Saregama — Lata, Rafi, Kishore", emoji:"🎼",
+       url:"https://www.youtube.com/@saregamamusic", hrs:80},
+      {mr:"गाण्यांचा सुवर्णकाळ", en:"2 hrs nonstop old Marathi songs", emoji:"✨",
+       url:"https://www.youtube.com/watch?v=h3T2DAbP-HI", hrs:2},
+      {mr:"पु. ल. देशपांडे", en:"Kathakathan — pure laughter", emoji:"😄",
+       url:"https://www.youtube.com/playlist?list=PLtVoysWT7s1WpAlKGIFULTyzIjqHWGuvm", hrs:20},
+      {mr:"बासरी — हरिप्रसाद चौरसिया", en:"Saregama classical flute — 39 ragas", emoji:"🪈",
+       url:"https://www.youtube.com/playlist?list=PLb5pq8p1HZfKusVbadzl7yHbR4atCXHe-", hrs:15}
+    ]
+  },
+  {
+    mr:"जुनी आवड", en:"Old favorites — nostalgia & bhakti", emoji:"📻", color:"#CA5010",
+    children:[
+      {mr:"राजश्री मराठी", en:"Classic Marathi movies", emoji:"🎬",
+       url:"https://www.youtube.com/@RajshriMarathi", hrs:100},
+      {mr:"Zee Talkies", en:"Full Marathi movies, plays & kirtan", emoji:"🎞️",
+       url:"https://www.youtube.com/channel/UCBAhH8ma7VWNPWoiAOdrgUQ", hrs:100},
+      {mr:"गीत रामायण", en:"Sudhir Phadke — complete, 10 volumes", emoji:"🙏",
+       url:"https://www.youtube.com/playlist?list=PLcQ9aHIZMz1rIPUnAUVwt8rrNPpQm5ALL", hrs:8},
+      {mr:"सुमीत म्युझिक", en:"Kirtan, abhang & bhaktigeet", emoji:"🪕",
+       url:"https://www.youtube.com/@sumeetmusic", hrs:60},
+      {mr:"दूरदर्शनचा खजिना", en:"Prasar Bharati Archives — rare gems", emoji:"📺",
+       url:"https://www.youtube.com/channel/UCWxqSvqiH8PGpSNPSVtFwGw", hrs:80}
+    ]
+  },
+  {
+    mr:"आरोग्य व हालचाल", en:"Health & movement", emoji:"🌿", color:"#107C10",
+    children:[
+      {mr:"योगा इन्स्टिट्यूट", en:"Dr. Hansaji — gentle yoga & pranayama (Hindi)", emoji:"🧘",
+       url:"https://www.youtube.com/@TheYogaInstituteHindi", hrs:60},
+      {mr:"६० नंतर व्यायाम", en:"More Life Health — physio for 60+", emoji:"💪",
+       url:"https://www.youtube.com/c/MoreLifeHealth", hrs:40},
+      {mr:"योगासने मराठीत", en:"Pebbles — 71 yoga lessons in Marathi", emoji:"🕉️",
+       url:"https://www.youtube.com/playlist?list=PLnCcvHTIyuPT-6OLgxIuToNhYX7IM59jr", hrs:20}
+    ]
+  },
+  {
+    mr:"उद्योग व कौशल्य", en:"Business & hands-on skills", emoji:"🛠️", color:"#038387",
+    children:[
+      {mr:"टाटा समूह", en:"This is Tata — official group channel", emoji:"🏛️",
+       url:"https://www.youtube.com/@TataCompanies", hrs:30},
+      {mr:"उद्योग कथा", en:"Think School Hindi — Tata, Ambani & more", emoji:"📈",
+       url:"https://www.youtube.com/@ThinkSchool_Hindi", hrs:40},
+      {mr:"घर कसे बांधावे", en:"UltraTech — step-by-step home building", emoji:"🏗️",
+       url:"https://www.youtube.com/channel/UC7R0m2JO9EsJNJZPDR2U7YQ", hrs:30},
+      {mr:"घरगुती दुरुस्ती", en:"Everyday Home Repairs — DIY (English)", emoji:"🔧",
+       url:"https://www.youtube.com/@EverydayHomeRepairs", hrs:40},
+      {mr:"गुंतवणूक शिक्षण", en:"Pranjal Kamra — finance basics (Hindi)", emoji:"💰",
+       url:"https://www.youtube.com/channel/UCwAdQUuPT6laN-AQR17fe1g", hrs:40},
+      {mr:"स्थापत्य शिक्षण", en:"Civil engineering — technical tutorials", emoji:"📐",
+       url:"https://www.youtube.com/@CIVILEngineeringTutorials", hrs:30}
+    ]
+  }
+];
+
+/* ================= EDIT ABOVE THIS LINE ================= */
+
+const link = t => t.url;
+const dayIndex = Math.floor(Date.now() / 864e5);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+
+const marDays = ["रविवार","सोमवार","मंगळवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"];
+const marMonths = ["जानेवारी","फेब्रुवारी","मार्च","एप्रिल","मे","जून","जुलै","ऑगस्ट","सप्टेंबर","ऑक्टोबर","नोव्हेंबर","डिसेंबर"];
+const now = new Date();
+document.getElementById("today").textContent =
+  marDays[now.getDay()] + ", " + now.getDate() + " " + marMonths[now.getMonth()] + " " + now.getFullYear();
+
+function getPath() {
+  return (location.hash.replace(/^#\/?/, "") || "").split("/").filter(x => x !== "").map(Number);
+}
+function nodeAt(path) {
+  let list = MENU, node = null, crumbs = [];
+  for (const i of path) {
+    node = list[i];
+    if (!node) return {node:null, crumbs};
+    crumbs.push(node.mr);
+    list = node.children || [];
+  }
+  return {node, crumbs};
+}
+function go(idx) {
+  const p = getPath(); p.push(idx);
+  location.hash = "/" + p.join("/");
+}
+function tileHTML(t, idx, inheritColor, tag) {
+  const color = t.color || inheritColor;
+  const icon = t.img
+    ? '<img class="logo" src="' + t.img + '" alt="" loading="lazy" onerror="this.parentElement.textContent=\'' + t.emoji + '\'">'
+    : t.emoji;
+  const inner = '<div class="emoji">' + icon + '</div><div class="txt">' +
+                (tag ? '<span class="tag">' + esc(tag) + '</span><br>' : '') +
+                '<div class="mr">' + esc(t.mr) + '</div><div class="en">' + esc(t.en) + '</div>' +
+                (t.children ? '<div class="more">आत पहा (' + t.children.length + ')</div>' : '') + '</div>' +
+                (t.children ? '<div class="chev">▸</div>' : '<div class="spacer"></div>');
+  if (t.children) {
+    return '<button class="tile" style="background:' + color + '" onclick="go(' + idx + ')">' + inner + '</button>';
+  }
+  return '<a class="tile" style="background:' + color + '" href="' + link(t) + '" target="_blank" rel="noopener">' + inner + '</a>';
+}
+function render() {
+  const path = getPath();
+  const {node, crumbs} = nodeAt(path);
+  const app = document.getElementById("app");
+  let html = "";
+
+  if (path.length === 0) {
+    // HOME — calm: quote, today's 3 good choices, five buckets.
+    const qd = QUOTES[dayIndex % QUOTES.length];
+    html += '<div class="quote">“' + qd.t + '”' + (qd.w ? '<span class="who">— ' + qd.w + '</span>' : '') + '</div>';
+
+    html += '<div class="section-title">आजचे ३ चांगले पर्याय <span>Today\'s 3 good choices</span></div><div class="grid">';
+    const dailyColors = ["#FF8C00","#E3008C","#107C10"];
+    DAILY_POOLS.forEach((pool, i) => {
+      const t = pool.list[dayIndex % pool.list.length];
+      html += tileHTML(t, i, dailyColors[i], pool.tag);
+    });
+    html += '</div>';
+
+    html += '<div class="section-title">विभाग <span>Sections</span></div><div class="grid">';
+    MENU.forEach((t, i) => { html += tileHTML(t, i, t.color); });
+    html += '</div>';
+  } else if (node) {
+    html += '<div class="backbar"><button onclick="history.back()">← मागे' +
+            '<span class="crumb">' + esc(crumbs.join(" › ")) + '</span>' +
+            '<span class="crumb-s">' + esc(crumbs[crumbs.length - 1]) + '</span></button></div>';
+    html += '<div class="section-title">' + esc(node.mr) + ' <span>' + esc(node.en) + '</span></div><div class="grid">';
+    (node.children || []).forEach((t, i) => { html += tileHTML(t, i, t.color || node.color); });
+    html += '</div>';
+  } else {
+    location.hash = ""; return;
+  }
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", render);
+render();
+
+function sumHrs(list){ return list.reduce((a,t)=>a + (t.hrs||0) + (t.children?sumHrs(t.children):0), 0); }
+const totalHrs = sumHrs(MENU);
+document.getElementById("maker").innerHTML =
+  "एकूण निवडक सामग्री अंदाजे <b>" + totalHrs + "+ तास</b><br>" +
+  "आज थोडं चांगलं पाहूया. निवांत, शांत, आणि उपयोगी.<br>" +
+  "शेवटचे अपडेट / Last updated: " + LAST_UPDATED;
+</script>
+</body>
+</html>
