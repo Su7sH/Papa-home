@@ -1,4 +1,4 @@
-# Baba Internet Home
+# Papa Home
 
 A Marathi-first, phone-friendly homepage with large tiles for curated, calmer internet destinations.
 
